@@ -1,0 +1,14 @@
+.App {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+}
