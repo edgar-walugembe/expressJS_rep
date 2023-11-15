@@ -14,27 +14,15 @@ import axios from "axios";
 
 const App = () => {
   const [devs, setDevs] = useState([]);
-
-  //Create dev Modal
-  const [visible, setVisible] = useState(false);
-  const [validated, setValidated] = useState(false);
-  const devRef = useRef();
-
-  const saveDev = async (event) => {
-    event.preventDefault();
-    const form = devRef.current;
-  };
-
-  //delete Modal
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [editDev, setEditDev] = useState(null);
 
   useEffect(() => {
     fetchDev();
   }, []);
 
   const url = "http://localhost:5000/dev";
+  const url2 = "http://localhost:5000/dev/create-dev";
+  const url3 = "http://localhost:5000/dev/edit-dev";
 
   const fetchDev = async () => {
     const res = await axios.get(url);
@@ -44,6 +32,68 @@ const App = () => {
     }
   };
 
+  //Create developer Modal
+  const [visible, setVisible] = useState(false);
+  const [validated, setValidated] = useState(false);
+  const devRef = useRef(null);
+
+  const submitForm = async (event) => {
+    event.preventDefault();
+    devRef.current.requestSubmit();
+    saveDev();
+    fetchDev();
+  };
+
+  const saveDev = async (event) => {
+    const form = devRef.current;
+
+    if (form.checkValidity() === true) {
+      const newDev = {
+        firstName: form.firstName.value,
+        lastName: form.lastName.value,
+        email: form.email.value,
+        gender: form.gender.value,
+      };
+
+      try {
+        let res;
+
+        if (editDev) {
+          res = await axios.patch(url3, newDev);
+        } else {
+          res = await axios.post(url2, newDev);
+        }
+
+        if (res.data.success) {
+          setDevs((prevDevs) => {
+            prevDevs.map((dev) => (dev.id === editDev?.id ? newDev : dev));
+          });
+
+          // setVisible(false);
+          // form.reset();
+          // setValidated(false);
+
+          closeCreateDevDialog();
+          form.reset();
+          setValidated(false);
+
+          localStorage.setItem("devs", JSON.stringify([...devs, newDev]));
+        } else {
+          console.error("Failed to add Dev to express_db.");
+        }
+      } catch (error) {
+        console.error("Error adding Dev to express_db:", error);
+      }
+    } else {
+      setValidated(true);
+    }
+  };
+
+  //editDeveloper Modal
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const deleteDev = (devToDelete) => {
     let confirm = window.confirm(
       "Are you sure you want to delete this student?"
@@ -52,19 +102,26 @@ const App = () => {
       const updatedDevs = devs.filter((dev) => dev.id !== devToDelete.id);
       setDevs(updatedDevs);
 
-      confirm = window.confirm("dev deleted successfully");
+      // confirm = window.confirm("dev deleted successfully");
     }
   };
-  const openAddStudentDialog = () => {
+
+  //open && close CreateDev Dialog.
+  const openCreateDevDialog = () => {
     setVisible(true);
+    setEditDev(null);
   };
 
-  // const closeAddStudentDialog = () => {
-  //   setVisible(false);
-  // };
+  const closeCreateDevDialog = () => {
+    setVisible(false);
+  };
 
-  const submitForm = () => {
-    devRef.current.requestSubmit();
+  const openEditDevDialog = (dev) => {
+    setEditDev(dev);
+    setShow(true);
+  };
+  const closeEditDevDialog = (dev) => {
+    setShow(false);
   };
 
   return (
@@ -99,13 +156,18 @@ const App = () => {
                         <div className="d-flex justify-content-between">
                           <Button
                             size="sm"
+                            variant="warning"
+                            onClick={() => openEditDevDialog(dev)}
+                          >
+                            Edit
+                          </Button>
+
+                          <Button
+                            size="sm"
                             variant="danger"
                             onClick={() => deleteDev(dev)}
                           >
                             Delete
-                          </Button>
-                          <Button size="sm" variant="warning">
-                            Edit
                           </Button>
                           {/* <Button
                             size="sm"
@@ -123,8 +185,8 @@ const App = () => {
             </Table>
           </Col>
           <Col md={12} xs={12} sm={12}>
-            <div className="addButton">
-              <Button variant="info" onClick={openAddStudentDialog}>
+            <div className="addButton mb-2">
+              <Button variant="info" onClick={openCreateDevDialog}>
                 Add New Developer
               </Button>
             </div>
@@ -214,7 +276,7 @@ const App = () => {
                   <Form.Control
                     name="dob"
                     type="date"
-                    placeholder="12/12/2003"
+                    placeholder="31/12/2000"
                   />
                 </Form.Group>
               </Col>
@@ -225,13 +287,18 @@ const App = () => {
           <Button variant="warning" onClick={() => setVisible(false)}>
             Cancel
           </Button>
-          <Button onClick={() => submitForm()} variant="success" type="submit">
+
+          <Button
+            onClick={(event) => submitForm(event)}
+            variant="success"
+            type="Button"
+          >
             Submit
           </Button>
         </Modal.Footer>
       </Modal>
 
-      {/* delete exiting developer */}
+      {/* edit developer */}
       <Modal
         show={show}
         onHide={handleClose}
@@ -239,17 +306,19 @@ const App = () => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Delete Developer</Modal.Title>
+          <Modal.Title>
+            {editDev ? "Edit Developer" : "Add New Developer"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete this Developer ???
+          <Form noValidate validated={validated} ref={devRef}></Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button size="sm" variant="secondary" onClick={handleClose}>
-            Close
+          <Button size="sm" variant="primary" onClick={closeEditDevDialog}>
+            Cancel
           </Button>
-          <Button size="sm" variant="primary">
-            Delete
+          <Button onClick={saveDev} size="sm" variant="success" type="Button">
+            Save
           </Button>
         </Modal.Footer>
       </Modal>

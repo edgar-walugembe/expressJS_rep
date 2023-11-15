@@ -9,6 +9,7 @@
 /backend/routes/teachers.js
 /backend/deleteTeacher.js
 /backend/insert-data.js
+/backend/README.md
 
 #frontend#
 
@@ -19,6 +20,7 @@
 
 # testing
 /frontend/coverage
+/frontend/README.md
 
 # production
 /frontend/build
