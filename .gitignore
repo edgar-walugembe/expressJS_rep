@@ -17,6 +17,9 @@
 /frontend/node_modules
 /frontend/.pnp
 /frontend/.pnp.js
+/frontend/src/reportWebVitals
+/frontend/src/setupTests
+/frontend/src/App.test
 
 # testing
 /frontend/coverage
