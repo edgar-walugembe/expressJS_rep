@@ -20,12 +20,13 @@ const App = () => {
     fetchDev();
   }, []);
 
-  const url = "http://localhost:5000/dev";
-  const url2 = "http://localhost:5000/dev/create-dev";
-  const url3 = "http://localhost:5000/dev/edit-dev";
+  const getUrl = "http://localhost:5000/dev";
+  const createUrl = "http://localhost:5000/dev/create-dev";
+  const editUrl = "http://localhost:5000/dev/edit-dev";
+  const deleteUrl = "http://localhost:5000/dev/delete-dev";
 
   const fetchDev = async () => {
-    const res = await axios.get(url);
+    const res = await axios.get(getUrl);
 
     if (res) {
       setDevs(res.data.devs);
@@ -59,15 +60,17 @@ const App = () => {
         let res;
 
         if (editDev) {
-          res = await axios.patch(url3, newDev);
+          res = await axios.patch(editUrl, newDev);
         } else {
-          res = await axios.post(url2, newDev);
+          res = await axios.post(createUrl, newDev);
         }
 
         if (res.data.success) {
-          setDevs((prevDevs) => {
-            prevDevs.map((dev) => (dev.id === editDev?.id ? newDev : dev));
-          });
+          setDevs((prevDevs) =>
+            prevDevs.map((dev) =>
+              dev.id === editDev?.id ? { ...dev, ...newDev } : dev
+            )
+          );
 
           // setVisible(false);
           // form.reset();
@@ -77,6 +80,7 @@ const App = () => {
           form.reset();
           setValidated(false);
 
+          setDevs((prevDevs) => [...prevDevs, newDev]);
           localStorage.setItem("devs", JSON.stringify([...devs, newDev]));
         } else {
           console.error("Failed to add Dev to express_db.");
@@ -116,12 +120,37 @@ const App = () => {
     setVisible(false);
   };
 
+  // open & close EditDev Dialog.
+  const [editFirstName, setEditFirstName] = useState("");
+  const [editLastName, setEditLastName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editGender, setEditGender] = useState("");
+  const [editDob, setEditDob] = useState("");
+
   const openEditDevDialog = (dev) => {
+    console.log("Open Edit Developer Dialog called");
+    console.log(dev);
+
+    if (!dev) {
+      console.error("Dev object is undefined");
+      return;
+    }
     setEditDev(dev);
     setShow(true);
+
+    console.log("Setting values to form fields:", dev);
+
+    setEditFirstName(dev.firstName || "");
+    setEditLastName(dev.lastName || "");
+    setEditEmail(dev.email || "");
+    setEditGender(dev.gender || "");
+    setEditDob(dev.dateOfBirth || "");
+
+    setValidated(false);
   };
-  const closeEditDevDialog = (dev) => {
+  const closeEditDevDialog = () => {
     setShow(false);
+    setEditDev(null);
   };
 
   return (
@@ -145,7 +174,7 @@ const App = () => {
               <tbody>
                 {devs?.map((dev, i) => {
                   return (
-                    <tr>
+                    <tr key={dev.id}>
                       <td>{i + 1}</td>
                       <td>{dev.firstName}</td>
                       <td>{dev.lastName}</td>
@@ -311,13 +340,98 @@ const App = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form noValidate validated={validated} ref={devRef}></Form>
+          <Form
+            noValidate
+            validated={validated}
+            ref={devRef}
+            onSubmit={saveDev}
+          >
+            <Row>
+              <Col xs={12} md={6}>
+                <Form.Group className="mb-2 flex" controlId="firstName">
+                  <Form.Label>FirstName</Form.Label>
+                  <Form.Control
+                    required={true}
+                    name="firstName"
+                    type="text"
+                    placeholder="Enter first name"
+                    value={editFirstName}
+                    onChange={(e) => setEditFirstName(e.target.value)}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    First name is required.
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group className="mb-2" controlId="lastName">
+                  <Form.Label>LastName</Form.Label>
+                  <Form.Control
+                    required={true}
+                    name="lastName"
+                    type="text"
+                    placeholder="Enter last name"
+                    value={editLastName}
+                    onChange={(e) => setEditLastName(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col xs={12} md={6}>
+                <Form.Group
+                  className="mb-2"
+                  controlId="exampleForm.ControlInput1"
+                >
+                  <Form.Label>E-mail</Form.Label>
+                  <Form.Control
+                    name="email"
+                    type="email"
+                    placeholder="name@example.com"
+                    value={editEmail}
+                    onChange={(e) => setEditEmail(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col xs={12} md={6}>
+                <Form.Group className="mb-2" controlId="gender">
+                  <Form.Label>Gender</Form.Label>
+                  <Form.Select
+                    name="gender"
+                    required={true}
+                    aria-label="Select Gender"
+                    value={editGender}
+                    onChange={(e) => setEditGender(e.target.value)}
+                  >
+                    <option>Open this select menu</option>
+                    <option value="Male">MALE</option>
+                    <option value="Female">FEMALE</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col xs={12} md={6}>
+                <Form.Group className="mb-2" controlId="dob">
+                  <Form.Label>Date of birth</Form.Label>
+                  <Form.Control
+                    name="dob"
+                    type="date"
+                    placeholder="31/12/2000"
+                    value={editDob}
+                    onChange={(e) => setEditDob(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button size="sm" variant="primary" onClick={closeEditDevDialog}>
             Cancel
           </Button>
-          <Button onClick={saveDev} size="sm" variant="success" type="Button">
+          <Button
+            onClick={(event) => submitForm(event)}
+            size="sm"
+            variant="success"
+            type="Button"
+          >
             Save
           </Button>
         </Modal.Footer>
