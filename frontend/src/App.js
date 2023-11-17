@@ -18,7 +18,7 @@ const App = () => {
 
   useEffect(() => {
     fetchDev();
-  }, []);
+  }, [devs]);
 
   const getUrl = "http://localhost:5000/dev";
   const createUrl = "http://localhost:5000/dev/create-dev";
