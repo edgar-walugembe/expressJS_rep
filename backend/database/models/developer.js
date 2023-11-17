@@ -92,7 +92,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       dateOfBirth: {
         type: DataTypes.DATE,
-        defaultValue: new Date(),
         allowNull: false,
         validate: {
           isDate: {

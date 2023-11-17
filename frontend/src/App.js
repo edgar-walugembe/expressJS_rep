@@ -28,8 +28,13 @@ const App = () => {
   const fetchDev = async () => {
     const res = await axios.get(getUrl);
 
-    if (res) {
+    if (res.data && res.data.devs) {
       setDevs(res.data.devs);
+
+      // Log the first dev's dateOfBirth
+      if (res.data.devs.length > 0) {
+        console.log("Fetched Date:", res.data.devs[0].dateOfBirth);
+      }
     }
   };
 
@@ -39,49 +44,60 @@ const App = () => {
   const devRef = useRef(null);
 
   const submitForm = async (event) => {
+    console.log("Submit form called");
     event.preventDefault();
     devRef.current.requestSubmit();
     saveDev();
     fetchDev();
   };
 
-  const saveDev = async (event) => {
+  const saveDev = async (_event) => {
     const form = devRef.current;
 
+    console.log("Form is valid:", form.checkValidity());
+
     if (form.checkValidity() === true) {
+      const formatDateWithoutTime = (timestamp) => {
+        const date = new Date(timestamp);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      };
+
       const newDev = {
         firstName: form.firstName.value,
         lastName: form.lastName.value,
         email: form.email.value,
         gender: form.gender.value,
+        dateOfBirth: formatDateWithoutTime(form.dob.value),
       };
+
+      console.log("Formatted Date:", newDev.dateOfBirth);
 
       try {
         let res;
 
         if (editDev) {
-          res = await axios.patch(editUrl, newDev);
+          const updatedDev = { ...editDev, ...newDev };
+          res = await axios.patch(editUrl, updatedDev);
         } else {
           res = await axios.post(createUrl, newDev);
         }
 
         if (res.data.success) {
           setDevs((prevDevs) =>
-            prevDevs.map((dev) =>
-              dev.id === editDev?.id ? { ...dev, ...newDev } : dev
-            )
+            editDev
+              ? prevDevs.map((dev) =>
+                  dev.id === editDev.id ? { ...dev, ...res.data.dev } : dev
+                )
+              : [...prevDevs, res.data.dev]
           );
-
-          // setVisible(false);
-          // form.reset();
-          // setValidated(false);
 
           closeCreateDevDialog();
           form.reset();
           setValidated(false);
-
-          setDevs((prevDevs) => [...prevDevs, newDev]);
-          localStorage.setItem("devs", JSON.stringify([...devs, newDev]));
+          setEditDev(null);
         } else {
           console.error("Failed to add Dev to express_db.");
         }
@@ -98,20 +114,41 @@ const App = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const deleteDev = (devToDelete) => {
-    let confirm = window.confirm(
-      "Are you sure you want to delete this student?"
+  const deleteDev = async (devToDelete) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this developer?"
     );
-    if (confirm) {
-      const updatedDevs = devs.filter((dev) => dev.id !== devToDelete.id);
-      setDevs(updatedDevs);
 
-      // confirm = window.confirm("dev deleted successfully");
+    if (confirmDelete) {
+      try {
+        const res = await axios.delete(`${deleteUrl}/${devToDelete.id}`);
+
+        if (res.data.success) {
+          setDevs((prevDevs) => {
+            const updatedDevs = prevDevs.filter(
+              (dev) => dev.id !== devToDelete.id
+            );
+            console.log("Developer deleted successfully");
+            return updatedDevs;
+          });
+        } else {
+          console.error(
+            "Failed to delete developer from express_db:",
+            res.data.message
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Error deleting developer from express_db:",
+          error.message
+        );
+      }
     }
   };
 
   //open && close CreateDev Dialog.
   const openCreateDevDialog = () => {
+    console.log("Open create developer dialog called");
     setVisible(true);
     setEditDev(null);
   };
@@ -148,6 +185,7 @@ const App = () => {
 
     setValidated(false);
   };
+
   const closeEditDevDialog = () => {
     setShow(false);
     setEditDev(null);
@@ -180,7 +218,7 @@ const App = () => {
                       <td>{dev.lastName}</td>
                       <td>{dev.email}</td>
                       <td>{dev.gender}</td>
-                      <td>{dev.dateOfBirth}</td>
+                      <td>{new Date(dev.dateOfBirth).toLocaleDateString()}</td>
                       <td>
                         <div className="d-flex justify-content-between">
                           <Button
@@ -243,7 +281,8 @@ const App = () => {
             noValidate
             validated={validated}
             ref={devRef}
-            onSubmit={saveDev}
+            onSubmit={(event) => saveDev(event)}
+            autoComplete="true"
           >
             <Row>
               <Col xs={12} md={6}>
@@ -305,7 +344,7 @@ const App = () => {
                   <Form.Control
                     name="dob"
                     type="date"
-                    placeholder="31/12/2000"
+                    placeholder="2000/12/2000"
                   />
                 </Form.Group>
               </Col>
@@ -344,7 +383,8 @@ const App = () => {
             noValidate
             validated={validated}
             ref={devRef}
-            onSubmit={saveDev}
+            onSubmit={(event) => saveDev(event)}
+            autoComplete="true"
           >
             <Row>
               <Col xs={12} md={6}>
