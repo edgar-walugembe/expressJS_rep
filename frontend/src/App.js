@@ -10,7 +10,15 @@ import {
   Form,
 } from "react-bootstrap";
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import axios from "./axiosConfig";
+
+const formatDateWithoutTime = (timestamp) => {
+  const date = new Date(timestamp);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 const App = () => {
   const [devs, setDevs] = useState([]);
@@ -39,6 +47,10 @@ const App = () => {
     }
   };
 
+  const updateEditDev = (newValues) => {
+    setEditDev((prevEditDev) => ({ ...prevEditDev, ...newValues }));
+  };
+
   //Create developer Modal
   const [visible, setVisible] = useState(false);
   const [validated, setValidated] = useState(false);
@@ -52,20 +64,12 @@ const App = () => {
     fetchDev();
   };
 
-  const saveDev = async (_event) => {
+  const saveDev = async () => {
     const form = devRef.current;
 
     console.log("Form is valid:", form.checkValidity());
 
     if (form.checkValidity() === true) {
-      const formatDateWithoutTime = (timestamp) => {
-        const date = new Date(timestamp);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
-        return `${year}-${month}-${day}`;
-      };
-
       const newDev = {
         firstName: form.firstName.value,
         lastName: form.lastName.value,
@@ -81,10 +85,12 @@ const App = () => {
 
         if (editDev) {
           const updatedDev = { ...editDev, ...newDev };
-          res = await axios.patch(editUrl, updatedDev);
+          res = await axios.patch(`${editUrl}?id=${editDev.id}`, updatedDev);
         } else {
           res = await axios.post(createUrl, newDev);
         }
+
+        console.log("Server Response:", res);
 
         if (res.data.success) {
           setDevs((prevDevs) =>
@@ -95,15 +101,21 @@ const App = () => {
               : [...prevDevs, res.data.dev]
           );
 
+          updateEditDev(newDev);
+
           closeCreateDevDialog();
+
           form.reset();
           setValidated(false);
           setEditDev(null);
         } else {
-          console.error("Failed to add Dev to express_db.");
+          console.error("Failed to add/edit developer:", res.data.message);
         }
       } catch (error) {
-        console.error("Error adding Dev to express_db:", error);
+        console.error("Error adding Dev to express_db:", error.message);
+        console.error("Error details:", error);
+
+        throw error;
       }
     } else {
       setValidated(true);
@@ -150,7 +162,8 @@ const App = () => {
     setEditLastName(dev.lastName || "");
     setEditEmail(dev.email || "");
     setEditGender(dev.gender || "");
-    setEditDob(dev.dateOfBirth || "");
+    // setEditDob(dev.dateOfBirth || "");
+    setEditDob(dev.dateOfBirth ? formatDateWithoutTime(dev.dateOfBirth) : "");
 
     setValidated(false);
   };
@@ -181,7 +194,7 @@ const App = () => {
 
     if (deletedDev) {
       try {
-        const res = await axios.delete(`${deleteUrl}/${deletedDev.id}`);
+        const res = await axios.delete(`${deleteUrl}?id=${deletedDev.id}`);
 
         if (res.data.success) {
           setDevs((prevDevs) =>
@@ -297,7 +310,7 @@ const App = () => {
             noValidate
             validated={validated}
             ref={devRef}
-            onSubmit={(event) => saveDev(event)}
+            onSubmit={saveDev}
             autoComplete="true"
           >
             <Row>
@@ -399,7 +412,7 @@ const App = () => {
             noValidate
             validated={validated}
             ref={devRef}
-            onSubmit={(event) => saveDev(event)}
+            onSubmit={saveDev}
             autoComplete="true"
           >
             <Row>
