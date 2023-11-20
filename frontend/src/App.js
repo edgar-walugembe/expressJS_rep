@@ -15,10 +15,11 @@ import axios from "axios";
 const App = () => {
   const [devs, setDevs] = useState([]);
   const [editDev, setEditDev] = useState(null);
+  const [deletedDev, setDeletedDev] = useState(null);
 
   useEffect(() => {
     fetchDev();
-  }, [devs]);
+  }, []);
 
   const getUrl = "http://localhost:5000/dev";
   const createUrl = "http://localhost:5000/dev/create-dev";
@@ -114,38 +115,6 @@ const App = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const deleteDev = async (devToDelete) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this developer?"
-    );
-
-    if (confirmDelete) {
-      try {
-        const res = await axios.delete(`${deleteUrl}/${devToDelete.id}`);
-
-        if (res.data.success) {
-          setDevs((prevDevs) => {
-            const updatedDevs = prevDevs.filter(
-              (dev) => dev.id !== devToDelete.id
-            );
-            console.log("Developer deleted successfully");
-            return updatedDevs;
-          });
-        } else {
-          console.error(
-            "Failed to delete developer from express_db:",
-            res.data.message
-          );
-        }
-      } catch (error) {
-        console.error(
-          "Error deleting developer from express_db:",
-          error.message
-        );
-      }
-    }
-  };
-
   //open && close CreateDev Dialog.
   const openCreateDevDialog = () => {
     console.log("Open create developer dialog called");
@@ -173,7 +142,7 @@ const App = () => {
       return;
     }
     setEditDev(dev);
-    setShow(true);
+    handleShow();
 
     console.log("Setting values to form fields:", dev);
 
@@ -187,8 +156,54 @@ const App = () => {
   };
 
   const closeEditDevDialog = () => {
-    setShow(false);
+    handleClose();
     setEditDev(null);
+  };
+
+  //deleteDeveloper Modal
+  const [deleteModal, setDeleteModal] = useState(false);
+
+  //open & close DeleteDev Dialog.
+  const openDeleteDevDialog = (dev) => {
+    setDeletedDev(dev);
+    setDeleteModal(true);
+  };
+
+  const closeDeleteDevDialog = () => {
+    setDeleteModal(false);
+    setDeletedDev(null);
+  };
+
+  const deleteDev = async () => {
+    // const confirmDelete = window.confirm(
+    //   "Are you sure you want to delete this developer?"
+    // );
+
+    if (deletedDev) {
+      try {
+        const res = await axios.delete(`${deleteUrl}/${deletedDev.id}`);
+
+        if (res.data.success) {
+          setDevs((prevDevs) =>
+            prevDevs.filter((dev) => dev.id !== deletedDev.id)
+          );
+
+          fetchDev();
+        } else {
+          console.error(
+            "Failed to delete developer from express_db:",
+            res.data.message
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Error deleting developer from express_db:",
+          error.message
+        );
+      }
+    }
+
+    closeDeleteDevDialog();
   };
 
   return (
@@ -232,7 +247,8 @@ const App = () => {
                           <Button
                             size="sm"
                             variant="danger"
-                            onClick={() => deleteDev(dev)}
+                            // onClick={() => deleteDev(dev)}
+                            onClick={() => openDeleteDevDialog(dev)}
                           >
                             Delete
                           </Button>
@@ -473,6 +489,29 @@ const App = () => {
             type="Button"
           >
             Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* delete developer */}
+      <Modal
+        show={deleteModal}
+        onHide={closeDeleteDevDialog}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Developer</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete this developer ?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button size="sm" variant="info" onClick={closeDeleteDevDialog}>
+            Cancel
+          </Button>
+          <Button onClick={deleteDev} size="sm" variant="danger" type="Button">
+            Delete
           </Button>
         </Modal.Footer>
       </Modal>
