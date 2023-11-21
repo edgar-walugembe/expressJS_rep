@@ -22,7 +22,13 @@ const formatDateWithoutTime = (timestamp) => {
 
 const App = () => {
   const [devs, setDevs] = useState([]);
-  const [editDev, setEditDev] = useState(null);
+  const [editDev, setEditDev] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    gender: "",
+    dateOfBirth: "",
+  });
   const [deletedDev, setDeletedDev] = useState(null);
 
   useEffect(() => {
@@ -39,11 +45,6 @@ const App = () => {
 
     if (res.data && res.data.devs) {
       setDevs(res.data.devs);
-
-      // Log the first dev's dateOfBirth
-      if (res.data.devs.length > 0) {
-        console.log("Fetched Date:", res.data.devs[0].dateOfBirth);
-      }
     }
   };
 
@@ -85,7 +86,7 @@ const App = () => {
 
         if (editDev) {
           const updatedDev = { ...editDev, ...newDev };
-          res = await axios.patch(`${editUrl}?id=${editDev.id}`, updatedDev);
+          res = await axios.put(`${editUrl}?id=${editDev.id}`, updatedDev);
         } else {
           res = await axios.post(createUrl, newDev);
         }
@@ -187,14 +188,17 @@ const App = () => {
     setDeletedDev(null);
   };
 
-  const deleteDev = async () => {
+  const deleteDev = async (id) => {
     // const confirmDelete = window.confirm(
     //   "Are you sure you want to delete this developer?"
     // );
 
     if (deletedDev) {
+      console.log("attempting to delete developer:", deletedDev);
       try {
-        const res = await axios.delete(`${deleteUrl}?id=${deletedDev.id}`);
+        const res = await axios.delete(`${deleteUrl}?id=${deletedDev.id}`, {
+          data: { dateOfBirth: formatDateWithoutTime(deletedDev.dateOfBirth) },
+        });
 
         if (res.data.success) {
           setDevs((prevDevs) =>
@@ -210,7 +214,7 @@ const App = () => {
         }
       } catch (error) {
         console.error(
-          "Error deleting developer from express_db:",
+          // "Error deleting developer from express_db:",
           error.message
         );
       }
@@ -246,7 +250,7 @@ const App = () => {
                       <td>{dev.lastName}</td>
                       <td>{dev.email}</td>
                       <td>{dev.gender}</td>
-                      <td>{new Date(dev.dateOfBirth).toLocaleDateString()}</td>
+                      <td>{formatDateWithoutTime(dev.dateOfBirth)}</td>
                       <td>
                         <div className="d-flex justify-content-between">
                           <Button
@@ -367,14 +371,18 @@ const App = () => {
                   </Form.Select>
                 </Form.Group>
               </Col>
+
               <Col xs={12} md={6}>
                 <Form.Group className="mb-2" controlId="dob">
                   <Form.Label>Date of birth</Form.Label>
-                  <Form.Control
-                    name="dob"
-                    type="date"
-                    placeholder="2000/12/2000"
-                  />
+                  <Form.Control name="dob" type="date" placeholder="" />
+                </Form.Group>
+              </Col>
+
+              <Col xs={12} md={6}>
+                <Form.Group className="mb-2" controlId="image">
+                  <Form.Label>Upload Dev photo</Form.Label>
+                  <Form.Control name="dob" type="file" placeholder="" />
                 </Form.Group>
               </Col>
             </Row>
@@ -476,6 +484,7 @@ const App = () => {
                   </Form.Select>
                 </Form.Group>
               </Col>
+
               <Col xs={12} md={6}>
                 <Form.Group className="mb-2" controlId="dob">
                   <Form.Label>Date of birth</Form.Label>
@@ -486,6 +495,13 @@ const App = () => {
                     value={editDob}
                     onChange={(e) => setEditDob(e.target.value)}
                   />
+                </Form.Group>
+              </Col>
+
+              <Col xs={12} md={6}>
+                <Form.Group className="mb-2" controlId="image">
+                  <Form.Label>Upload Dev photo</Form.Label>
+                  <Form.Control name="dob" type="file" placeholder="" />
                 </Form.Group>
               </Col>
             </Row>

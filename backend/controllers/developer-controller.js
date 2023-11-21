@@ -22,7 +22,7 @@ async function fetchAllDevs(req, res) {
 
 async function deleteDev(req, res, next) {
   try {
-    const devId = req.params.id;
+    const devId = req.query.id;
 
     const developer = await Developer.findOne({ where: { id: devId } });
     if (developer) {
@@ -39,7 +39,7 @@ async function deleteDev(req, res, next) {
 
 async function editDev(req, res, next) {
   try {
-    const devId = parseInt(req.params.id);
+    const devId = parseInt(req.query.id);
 
     const editedData = req.body;
 
