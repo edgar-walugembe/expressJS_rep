@@ -47,10 +47,11 @@ const App = () => {
 
   const saveDev = async () => {
     const form = devRef.current;
+    console.log("Form before reset:", form);
+    console.log("Form before reset - id:", form.id);
 
-    console.log("Form:", form);
-
-    console.log("Form is valid:", form.checkValidity());
+    // console.log("Form:", form);
+    // console.log("Form is valid:", form.checkValidity());
 
     if (form && form.checkValidity() === true) {
       const newDev = {
@@ -61,44 +62,47 @@ const App = () => {
         dateOfBirth: formatDateWithoutTime(form.dob.value),
       };
 
-      // try {
-      let res;
+      try {
+        let res;
 
-      if (editDev && editDev.id) {
-        const updatedDev = { ...editDev, ...newDev };
-        res = await axios.patch(`${editUrl}?id=${editDev.id}`, updatedDev);
-      } else {
-        res = await axios.post(createUrl, newDev);
-      }
-
-      console.log("Server Response:", res);
-
-      if (res.data.success) {
-        setDevs((prevDevs) =>
-          editDev
-            ? prevDevs.map((dev) =>
-                dev.id === editDev.id ? { ...dev, ...res.data.dev } : dev
-              )
-            : [...prevDevs, res.data.dev]
-        );
-
-        updateEditDev(newDev);
-
-        closeCreateDevDialog();
-
+        if (editDev && editDev.id) {
+          const updatedDev = { ...editDev, ...newDev };
+          res = await axios.patch(`${editUrl}?id=${editDev.id}`, updatedDev);
+        } else {
+          res = await axios.post(createUrl, newDev);
+        }
         form.reset();
-        setValidated(false);
-        setEditDev(null);
-      } else {
-        setValidated(true);
-        // console.error("Failed to add/edit developer:", res.data.message);
-      }
-      // } catch (error) {
-      //   console.error("Error adding Dev to express_db:", error.message);
-      //   console.error("Error details:", error);
 
-      //   throw error;
-      // }
+        console.log("Server Response:", res);
+
+        if (res.data.success) {
+          setDevs((prevDevs) =>
+            editDev
+              ? prevDevs.map((dev) =>
+                  dev.id === editDev.id ? { ...dev, ...res.data.dev } : dev
+                )
+              : [...prevDevs, res.data.dev]
+          );
+
+          updateEditDev(newDev);
+
+          closeCreateDevDialog();
+
+          form.reset();
+          setValidated(false);
+          setEditDev(null);
+        } else {
+          setValidated(true);
+          console.error("Failed to add/edit developer:", res.data.message);
+        }
+      } catch (error) {
+        console.error("Error adding Dev to express_db:", error.message);
+        console.error("Error details:", error);
+
+        throw error;
+      }
+      console.log("Form after reset:", form);
+      console.log("Form after reset - id:", form.id);
     } else {
       setValidated(true);
     }
@@ -163,26 +167,24 @@ const App = () => {
       const res = await axios.delete(`${deleteUrl}?id=${deletedDev.id}`, {
         data: { dateOfBirth: formatDateWithoutTime(deletedDev.dateOfBirth) },
       });
-
-      if (res.data.success) {
-        setDevs((prevDevs) =>
-          prevDevs.filter((dev) => dev.id !== deletedDev.id)
+      try {
+        if (res.data.success) {
+          setDevs((prevDevs) =>
+            prevDevs.filter((dev) => dev.id !== deletedDev.id)
+          );
+        } else {
+          console.error(
+            "Failed to delete developer from express_db:",
+            res.data.message
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Error deleting developer from express_db:",
+          error.message
         );
-
-        fetchDev();
       }
-      // else {
-      //   console.error(
-      //     "Failed to delete developer from express_db:",
-      //     res.data.message
-      //   );
-      // }
-      // } catch (error) {
-      //   console.error(
-      //     // "Error deleting developer from express_db:",
-      //     error.message
-      //   );
-      // }
+      fetchDev();
     }
 
     closeDeleteDevDialog();
