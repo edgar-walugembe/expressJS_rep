@@ -25,7 +25,7 @@ const App = () => {
 
   const getUrl = "http://localhost:5000/dev";
   const createUrl = "http://localhost:5000/dev/create-dev";
-  const editUrl = `http://localhost:5000/dev/edit-dev?id=${editDev.id}`;
+  const editUrl = "http://localhost:5000/dev/edit-dev";
   const deleteUrl = "http://localhost:5000/dev/delete-dev";
 
   const fetchDev = async () => {
@@ -48,11 +48,12 @@ const App = () => {
   const saveDev = async () => {
     const form = devRef.current;
 
+    console.log("Form:", form);
+
     console.log("Form is valid:", form.checkValidity());
 
-    if (form.checkValidity() === true) {
+    if (form && form.checkValidity() === true) {
       const newDev = {
-        id: form.id.value,
         firstName: form.firstName.value,
         lastName: form.lastName.value,
         email: form.email.value,
@@ -60,14 +61,12 @@ const App = () => {
         dateOfBirth: formatDateWithoutTime(form.dob.value),
       };
 
-      console.log("Formatted Date:", newDev.dateOfBirth);
-
       // try {
       let res;
 
       if (editDev && editDev.id) {
         const updatedDev = { ...editDev, ...newDev };
-        res = await axios.patch(editUrl, updatedDev);
+        res = await axios.patch(`${editUrl}?id=${editDev.id}`, updatedDev);
       } else {
         res = await axios.post(createUrl, newDev);
       }
@@ -90,10 +89,10 @@ const App = () => {
         form.reset();
         setValidated(false);
         setEditDev(null);
+      } else {
+        setValidated(true);
+        // console.error("Failed to add/edit developer:", res.data.message);
       }
-      // else {
-      //   console.error("Failed to add/edit developer:", res.data.message);
-      // }
       // } catch (error) {
       //   console.error("Error adding Dev to express_db:", error.message);
       //   console.error("Error details:", error);
@@ -157,7 +156,7 @@ const App = () => {
     setDeletedDev(null);
   };
 
-  const deleteDev = async (id) => {
+  const deleteDev = async () => {
     if (deletedDev) {
       console.log("attempting to delete developer:", deletedDev);
 
@@ -208,7 +207,7 @@ const App = () => {
                 </tr>
               </thead>
               <tbody>
-                {devs?.map((dev, i) => {
+                {devs?.map((dev) => {
                   return (
                     <tr key={dev.id}>
                       <td>{dev.id}</td>
