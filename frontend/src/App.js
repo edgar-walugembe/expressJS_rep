@@ -47,11 +47,6 @@ const App = () => {
 
   const saveDev = async () => {
     const form = devRef.current;
-    console.log("Form before reset:", form);
-    console.log("Form before reset - id:", form.id);
-
-    // console.log("Form:", form);
-    // console.log("Form is valid:", form.checkValidity());
 
     if (form && form.checkValidity() === true) {
       const newDev = {
@@ -62,20 +57,19 @@ const App = () => {
         dateOfBirth: formatDateWithoutTime(form.dob.value),
       };
 
+      let res;
+
+      if (editDev && editDev.id) {
+        const updatedDev = { ...editDev, ...newDev };
+        res = await axios.patch(`${editUrl}?id=${editDev.id}`, updatedDev);
+      } else {
+        res = await axios.post(createUrl, newDev);
+      }
+      form.reset();
+
+      debugger;
       try {
-        let res;
-
-        if (editDev && editDev.id) {
-          const updatedDev = { ...editDev, ...newDev };
-          res = await axios.patch(`${editUrl}?id=${editDev.id}`, updatedDev);
-        } else {
-          res = await axios.post(createUrl, newDev);
-        }
-        form.reset();
-
-        console.log("Server Response:", res);
-
-        if (res.data.success) {
+        if (res.status === 202 || res.status === 201) {
           setDevs((prevDevs) =>
             editDev
               ? prevDevs.map((dev) =>
@@ -98,11 +92,8 @@ const App = () => {
       } catch (error) {
         console.error("Error adding Dev to express_db:", error.message);
         console.error("Error details:", error);
-
         throw error;
       }
-      console.log("Form after reset:", form);
-      console.log("Form after reset - id:", form.id);
     } else {
       setValidated(true);
     }
@@ -115,7 +106,6 @@ const App = () => {
 
   //open && close CreateDev Dialog.
   const openCreateDevDialog = () => {
-    console.log("Open create developer dialog called");
     setVisible(true);
     setEditDev(null);
   };
@@ -126,17 +116,12 @@ const App = () => {
 
   // open & close EditDev Dialog.
   const openEditDevDialog = (dev) => {
-    console.log("Open Edit Developer Dialog called");
-    console.log(dev);
-
     if (!dev) {
       console.error("Dev object is undefined");
       return;
     }
     setEditDev(dev);
     handleShow();
-
-    console.log("Setting values to form fields:", dev);
 
     setValidated(false);
   };
@@ -164,11 +149,11 @@ const App = () => {
     if (deletedDev) {
       console.log("attempting to delete developer:", deletedDev);
 
-      const res = await axios.delete(`${deleteUrl}?id=${deletedDev.id}`, {
-        data: { dateOfBirth: formatDateWithoutTime(deletedDev.dateOfBirth) },
-      });
+      const res = await axios.delete(`${deleteUrl}?id=${deletedDev.id}`);
+      // debugger;
+
       try {
-        if (res.data.success) {
+        if (res.status === 202) {
           setDevs((prevDevs) =>
             prevDevs.filter((dev) => dev.id !== deletedDev.id)
           );
@@ -260,6 +245,7 @@ const App = () => {
         saveDev={saveDev}
         validated={validated}
         devRef={devRef}
+        fetchDev={fetchDev}
       />
 
       {/* edit developer */}

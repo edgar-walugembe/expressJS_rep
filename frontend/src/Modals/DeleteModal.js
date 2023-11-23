@@ -11,6 +11,7 @@ export const DeleteDeveloperModal = ({
       onHide={closeDeleteDevDialog}
       backdrop="static"
       keyboard={false}
+      centered
     >
       <Modal.Header closeButton>
         <Modal.Title>Delete Developer</Modal.Title>

@@ -14,8 +14,8 @@ export const CreateDeveloperModal = ({
     console.log("Submit form called");
     event.preventDefault();
     devRef.current.requestSubmit();
-    saveDev();
     fetchDev();
+    saveDev();
   };
 
   return (
@@ -128,5 +128,3 @@ export const CreateDeveloperModal = ({
     </Modal>
   );
 };
-
-

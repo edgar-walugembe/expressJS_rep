@@ -27,7 +27,7 @@ async function deleteDev(req, res, next) {
     const developer = await Developer.findOne({ where: { id: devId } });
     if (developer) {
       await developer.destroy();
-      return res.status(200).send(`dev id: ${devId} deleted successfully`);
+      return res.status(202).send(`dev id: ${devId} deleted successfully`);
     } else {
       return res.status(404).send(`dev id: ${devId} not found`);
     }
