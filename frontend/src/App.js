@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { Container, Table, Button, Row, Col } from "react-bootstrap";
+import { Container, Table, Button, Row, Col, Form } from "react-bootstrap";
 import { useState, useEffect, useRef } from "react";
 import axios from "./axiosConfig";
 import { formatDateWithoutTime } from "./utils";
@@ -27,6 +27,7 @@ const App = () => {
   const createUrl = "http://localhost:5000/dev/create-dev";
   const editUrl = "http://localhost:5000/dev/edit-dev";
   const deleteUrl = "http://localhost:5000/dev/delete-dev";
+  const uploadUrl = "http://localhost:5000/dev/upload-devFiles";
 
   const fetchDev = async () => {
     const res = await axios.get(getUrl);
@@ -67,7 +68,7 @@ const App = () => {
       }
       form.reset();
 
-      debugger;
+      // debugger;
       try {
         if (res.status === 202 || res.status === 201) {
           setDevs((prevDevs) =>
@@ -175,6 +176,27 @@ const App = () => {
     closeDeleteDevDialog();
   };
 
+  //UploadDevFiles
+  const uploadRef = useRef(null);
+
+  const submitDevFiles = async (event) => {
+    event.preventDefault();
+
+    try {
+      const uploadData = new FormData(uploadRef.current);
+
+      const res = await axios.post(uploadUrl, uploadData);
+
+      if (res.status === 200) {
+        console.log("devFile uploaded successfully");
+
+        uploadRef.current.reset();
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error.message);
+    }
+  };
+
   return (
     <div className="App">
       <Container>
@@ -234,6 +256,22 @@ const App = () => {
                 Add New Developer
               </Button>
             </div>
+          </Col>
+
+          <Col xs={12} md={6}>
+            <Form ref={uploadRef} onSubmit={submitDevFiles}>
+              <Form.Group className="mb-2" controlId="image">
+                <Form.Label>Upload Dev photo</Form.Label>
+                <Form.Control
+                  name="images"
+                  type="file"
+                  placeholder="Upload devFiles"
+                />
+              </Form.Group>
+              <Button variant="secondary" type="submit">
+                Upload devFile
+              </Button>
+            </Form>
           </Col>
         </Row>
       </Container>

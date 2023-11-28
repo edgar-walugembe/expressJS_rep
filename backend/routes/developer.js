@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const multer = require("multer");
 
 const {
   createDev,
   fetchAllDevs,
   deleteDev,
   editDev,
+  uploadDevFiles,
 } = require("../controllers/developer-controller");
 
-const {} = require("../middlewares/developer");
+const { upload } = require("../middlewares/developer");
 
 /* delete-developer Route. */
 router.delete("/delete-dev", deleteDev);
@@ -22,5 +22,7 @@ router.post("/create-dev", createDev);
 
 /* editDev Route. */
 router.patch("/edit-dev", editDev);
+
+router.post("/upload-devFiles", upload.single("images"), uploadDevFiles);
 
 module.exports = router;
