@@ -71,13 +71,27 @@ const App = () => {
       // debugger;
       try {
         if (res.status === 202 || res.status === 201) {
-          setDevs((prevDevs) =>
-            editDev
+          // setDevs((prevDevs) =>
+          //   editDev
+          //     ? prevDevs.map((dev) =>
+          //         dev.id === editDev.id ? { ...dev, ...res.data.dev } : dev
+          //       )
+          //     : [...prevDevs, res.data.dev]
+          // );
+
+          setDevs((prevDevs) => {
+            console.log("Previous state:", prevDevs);
+
+            const newDevs = editDev
               ? prevDevs.map((dev) =>
                   dev.id === editDev.id ? { ...dev, ...res.data.dev } : dev
                 )
-              : [...prevDevs, res.data.dev]
-          );
+              : [...prevDevs, res.data.dev];
+
+            console.log("New state:", newDevs);
+
+            return newDevs;
+          });
 
           updateEditDev(newDev);
 
