@@ -30,11 +30,15 @@ const App = () => {
   const uploadUrl = "http://localhost:5000/dev/upload-devFiles";
 
   const fetchDev = async () => {
-    const res = await axios.get(getUrl);
+    try {
+      const {
+        data: { devs },
+      } = await axios.get(getUrl);
 
-    if (res.data && res.data.devs) {
-      setDevs(res.data.devs);
-    }
+      if (devs) {
+        setDevs(devs);
+      }
+    } catch (error) {}
   };
 
   const updateEditDev = (newValues) => {
@@ -67,38 +71,13 @@ const App = () => {
         res = await axios.post(createUrl, newDev);
       }
       form.reset();
+      setValidated(false);
 
       // debugger;
       try {
         if (res.status === 202 || res.status === 201) {
-          // setDevs((prevDevs) =>
-          //   editDev
-          //     ? prevDevs.map((dev) =>
-          //         dev.id === editDev.id ? { ...dev, ...res.data.dev } : dev
-          //       )
-          //     : [...prevDevs, res.data.dev]
-          // );
-
-          // setDevs((prevDevs) => {
-          //   console.log("Previous state:", prevDevs);
-
-          //   const newDevs = editDev
-          //     ? prevDevs.map((dev) =>
-          //         dev.id === editDev.id ? { ...dev, ...res.data.dev } : dev
-          //       )
-          //     : [...prevDevs, res.data.dev];
-
-          //   console.log("New state:", newDevs);
-
-          //   return newDevs;
-          // });
-
           updateEditDev(newDev);
-
           closeCreateDevDialog();
-
-          form.reset();
-          setValidated(false);
           setEditDev(null);
         } else {
           setValidated(true);
@@ -165,7 +144,6 @@ const App = () => {
       console.log("attempting to delete developer:", deletedDev);
 
       const res = await axios.delete(`${deleteUrl}?id=${deletedDev.id}`);
-      // debugger;
 
       try {
         if (res.status === 202) {
@@ -179,10 +157,17 @@ const App = () => {
           );
         }
       } catch (error) {
-        console.error(
-          "Error deleting developer from express_db:",
-          error.message
-        );
+        if (error.response) {
+          console.error(
+            "Error deleting developer from express_db:",
+            error.response.status,
+            error.response.data
+          );
+        } else if (error.request) {
+          console.error("No response received:", error.request);
+        } else {
+          console.error("Error setting up the request:", error.message);
+        }
       }
     }
 
