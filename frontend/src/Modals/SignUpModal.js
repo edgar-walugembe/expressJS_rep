@@ -1,6 +1,6 @@
 import { Modal, Form, Col, Row, Button } from "react-bootstrap";
 
-export const LoginModal = () => {
+export const SignUpModal = () => {
   return (
     <Modal
       show={}
@@ -13,7 +13,7 @@ export const LoginModal = () => {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Developer Login...
+          Developer SignUp...
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
