@@ -11,9 +11,13 @@ import {
   deleteUrl,
   uploadUrl,
 } from "./utils";
-import { CreateDeveloperModal } from "./Modals/CreateModal";
-import { EditDeveloperModal } from "./Modals/EditModal";
-import { DeleteDeveloperModal } from "./Modals/DeleteModal";
+import {
+  CreateDeveloperModal,
+  EditDeveloperModal,
+  DeleteDeveloperModal,
+  LoginDeveloperModal,
+  SignUpDeveloperModal,
+} from "./Modals";
 
 const App = () => {
   const [devs, setDevs] = useState([]);
@@ -206,7 +210,7 @@ const App = () => {
     setLoginModal(true);
   };
 
-  const closeloginDevDialog = () => {
+  const closeLoginDevDialog = () => {
     setLoginModal(false);
     setLoginDev(null);
   };
@@ -278,10 +282,20 @@ const App = () => {
               </tbody>
             </Table>
           </Col>
-          <Col md={12} xs={12} sm={12}>
+          <Col md={12} xs={12} sm={12} className="buttonDiv">
             <div className="addButton mb-2">
               <Button variant="info" onClick={openCreateDevDialog}>
                 Add New Developer
+              </Button>
+            </div>
+            <div className="addButton mb-2">
+              <Button variant="secondary" onClick={openSignupDevDialog}>
+                Sign Up
+              </Button>
+            </div>
+            <div className="addButton mb-2">
+              <Button variant="warning" onClick={openLoginDevDialog}>
+                Log In
               </Button>
             </div>
           </Col>
@@ -330,6 +344,18 @@ const App = () => {
         deleteModal={deleteModal}
         closeDeleteDevDialog={closeDeleteDevDialog}
         deleteDev={deleteDev}
+      />
+
+      {/* login developer */}
+      <LoginDeveloperModal
+        loginModal={loginModal}
+        closeLoginDevDialog={closeLoginDevDialog}
+      />
+
+      {/* signup developer */}
+      <SignUpDeveloperModal
+        signupModal={signupModal}
+        closeSignupDevDialog={closeSignupDevDialog}
       />
     </div>
   );

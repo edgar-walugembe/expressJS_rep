@@ -1,10 +1,14 @@
 import { Modal, Form, Col, Row, Button } from "react-bootstrap";
 
-export const SignUpModal = () => {
+export const SignUpDeveloperModal = ({
+  signupModal,
+  closeSignupDevDialog,
+  validated,
+}) => {
   return (
     <Modal
-      show={}
-      onHide={}
+      show={signupModal}
+      onHide={closeSignupDevDialog}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
@@ -19,9 +23,9 @@ export const SignUpModal = () => {
       <Modal.Body>
         <Form
           noValidate
-          validated={}
-          ref={}
-          onSubmit={}
+          validated={validated}
+          // ref={}
+          // onSubmit={}
           autoComplete="true"
         >
           <Row>
@@ -42,7 +46,7 @@ export const SignUpModal = () => {
               </Form.Group>
             </Col>
 
-            <Col> 
+            <Col>
               <Form.Group className="mb-2" controlId="lastName">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
@@ -60,12 +64,12 @@ export const SignUpModal = () => {
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="warning" onClick={}>
+        <Button variant="warning" onClick={closeSignupDevDialog}>
           Cancel
         </Button>
 
         <Button
-          onClick={(event) => submitForm(event)}
+          // onClick={}
           variant="success"
           type="Button"
         >
