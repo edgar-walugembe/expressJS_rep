@@ -132,13 +132,6 @@ export const EditDeveloperModal = ({
                 />
               </Form.Group>
             </Col>
-
-            {/* <Col xs={12} md={6}>
-              <Form.Group className="mb-2" controlId="image">
-                <Form.Label>Upload Dev photo</Form.Label>
-                <Form.Control name="dob" type="file" placeholder="" />
-              </Form.Group>
-            </Col> */}
           </Row>
         </Form>
       </Modal.Body>

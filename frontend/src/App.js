@@ -79,19 +79,19 @@ const App = () => {
           //     : [...prevDevs, res.data.dev]
           // );
 
-          setDevs((prevDevs) => {
-            console.log("Previous state:", prevDevs);
+          // setDevs((prevDevs) => {
+          //   console.log("Previous state:", prevDevs);
 
-            const newDevs = editDev
-              ? prevDevs.map((dev) =>
-                  dev.id === editDev.id ? { ...dev, ...res.data.dev } : dev
-                )
-              : [...prevDevs, res.data.dev];
+          //   const newDevs = editDev
+          //     ? prevDevs.map((dev) =>
+          //         dev.id === editDev.id ? { ...dev, ...res.data.dev } : dev
+          //       )
+          //     : [...prevDevs, res.data.dev];
 
-            console.log("New state:", newDevs);
+          //   console.log("New state:", newDevs);
 
-            return newDevs;
-          });
+          //   return newDevs;
+          // });
 
           updateEditDev(newDev);
 
@@ -184,7 +184,6 @@ const App = () => {
           error.message
         );
       }
-      fetchDev();
     }
 
     closeDeleteDevDialog();
