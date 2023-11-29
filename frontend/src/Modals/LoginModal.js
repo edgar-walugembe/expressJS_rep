@@ -69,7 +69,7 @@ export const LoginModal = () => {
           variant="success"
           type="Button"
         >
-          LOGIN
+          Log In
         </Button>
       </Modal.Footer>
     </Modal>

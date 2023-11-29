@@ -5,3 +5,10 @@ export const formatDateWithoutTime = (timestamp) => {
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
+
+export const baseUrl = "http://localhost:5000/dev";
+export const getUrl = `${baseUrl}`;
+export const createUrl = `${baseUrl}/create-dev`;
+export const editUrl = `${baseUrl}/edit-dev`;
+export const deleteUrl = `${baseUrl}/delete-dev`;
+export const uploadUrl = `${baseUrl}/upload-devFiles`;

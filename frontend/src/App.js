@@ -3,7 +3,14 @@ import "./App.css";
 import { Container, Table, Button, Row, Col, Form } from "react-bootstrap";
 import { useState, useEffect, useRef } from "react";
 import axios from "./axiosConfig";
-import { formatDateWithoutTime } from "./utils";
+import {
+  formatDateWithoutTime,
+  getUrl,
+  createUrl,
+  editUrl,
+  deleteUrl,
+  uploadUrl,
+} from "./utils";
 import { CreateDeveloperModal } from "./Modals/CreateModal";
 import { EditDeveloperModal } from "./Modals/EditModal";
 import { DeleteDeveloperModal } from "./Modals/DeleteModal";
@@ -18,16 +25,12 @@ const App = () => {
     dateOfBirth: "",
   });
   const [deletedDev, setDeletedDev] = useState(null);
+  const [loginDev, setLoginDev] = useState(null);
+  const [signupDev, setSignupDev] = useState(null);
 
   useEffect(() => {
     fetchDev();
   }, []);
-
-  const getUrl = "http://localhost:5000/dev";
-  const createUrl = "http://localhost:5000/dev/create-dev";
-  const editUrl = "http://localhost:5000/dev/edit-dev";
-  const deleteUrl = "http://localhost:5000/dev/delete-dev";
-  const uploadUrl = "http://localhost:5000/dev/upload-devFiles";
 
   const fetchDev = async () => {
     try {
@@ -73,7 +76,6 @@ const App = () => {
       form.reset();
       setValidated(false);
 
-      // debugger;
       try {
         if (res.status === 202 || res.status === 201) {
           updateEditDev(newDev);
@@ -193,6 +195,34 @@ const App = () => {
     } catch (error) {
       console.error("Error uploading file:", error.message);
     }
+  };
+
+  //loginDeveloper Modal
+  const [loginModal, setLoginModal] = useState(false);
+
+  //open & close LoginDev Dialog.
+  const openLoginDevDialog = (dev) => {
+    setLoginDev(dev);
+    setLoginModal(true);
+  };
+
+  const closeloginDevDialog = () => {
+    setLoginModal(false);
+    setLoginDev(null);
+  };
+
+  //signupDeveloper Modal
+  const [signupModal, setSignupModal] = useState(false);
+
+  //open & close DeleteDev Dialog.
+  const openSignupDevDialog = (dev) => {
+    setSignupDev(dev);
+    setSignupModal(true);
+  };
+
+  const closeSignupDevDialog = () => {
+    setSignupModal(false);
+    setSignupDev(null);
   };
 
   return (
