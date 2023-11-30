@@ -11,9 +11,9 @@ export const CreateDeveloperModal = ({
   fetchDev,
 }) => {
   const submitForm = async (event) => {
-    debugger;
     console.log("Submit form called");
     event.preventDefault();
+    event.stopPropagation();
     devRef.current.requestSubmit();
     fetchDev();
   };

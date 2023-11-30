@@ -232,7 +232,9 @@ const App = () => {
   return (
     <div className="App">
       <Container>
-        <h1 style={{ fontWeight: "bold", fontStyle: "italic" }}>Quotes''</h1>
+        <h1 style={{ fontWeight: "bold", fontStyle: "italic" }}>
+          Developers''
+        </h1>
         <Row>
           <Col md={12} xs={12} sm={12}>
             <Table striped bordered hover>
