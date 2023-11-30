@@ -2,6 +2,7 @@ const { Developer, Sequelize, sequelize } = require("../database/models");
 
 async function createDev(req, res) {
   try {
+    console.log("dev created");
     const dev = await Developer.create(req.body);
     return res.status(201).send({ dev });
   } catch (err) {

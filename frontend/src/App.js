@@ -282,6 +282,7 @@ const App = () => {
               </tbody>
             </Table>
           </Col>
+
           <Col md={12} xs={12} sm={12} className="buttonDiv">
             <div className="addButton mb-2">
               <Button variant="info" onClick={openCreateDevDialog}>
