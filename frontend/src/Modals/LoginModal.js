@@ -29,8 +29,6 @@ export const LoginDeveloperModal = ({
           autoComplete="true"
         >
           <Row>
-            <Col></Col>
-
             <Col xs={12} md={6}>
               <Form.Group className="mb-2 flex" controlId="firstName">
                 <Form.Label>UserName</Form.Label>
@@ -45,8 +43,10 @@ export const LoginDeveloperModal = ({
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
+          </Row>
 
-            <Col>
+          <Row>
+            <Col xs={12} md={6}>
               <Form.Group className="mb-2" controlId="lastName">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
