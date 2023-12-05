@@ -78,10 +78,42 @@ async function uploadDevFiles(req, res, next) {
   }
 }
 
+async function signUpDev(req, res, next) {
+  try {
+    if (!req.file) {
+      return res.status(404).json({ error: "No file provided" });
+    }
+    const fileName = req.file.filename;
+    res
+      .status(200)
+      .json({ message: `devFile ${fileName} uploaded successfully` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+async function logInDev(req, res, next) {
+  try {
+    if (!req.file) {
+      return res.status(404).json({ error: "No file provided" });
+    }
+    const fileName = req.file.filename;
+    res
+      .status(200)
+      .json({ message: `devFile ${fileName} uploaded successfully` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 module.exports = {
   createDev,
   fetchAllDevs,
   deleteDev,
   editDev,
   uploadDevFiles,
+  logInDev,
+  signUpDev,
 };

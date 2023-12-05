@@ -318,7 +318,13 @@ const App = () => {
                 Upload devFile
               </Button>
             </Form>
-            <img src={`${baseUrl}/images/1701765665878.jpg`} alt="n" />
+            <div className="flex flex-start">
+              <img
+                src={`${baseUrl}/images/1701765665878.jpg`}
+                alt="n"
+                style={{ width: "120px", height: "120px", borderRadius: "50%" }}
+              />
+            </div>
           </Col>
         </Row>
       </Container>

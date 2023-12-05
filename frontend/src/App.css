@@ -14,9 +14,10 @@
     }
   }
 
-  img {
-    width: 120px;
-    height: 120px;
+  .imageForm {
+    img {
+      align-self: flex-start;
+    }
   }
 }
 
