@@ -318,7 +318,7 @@ const App = () => {
                 Upload devFile
               </Button>
             </Form>
-            <div className="flex flex-start">
+            <div className="d-flex justify-content-start">
               <img
                 src={`${baseUrl}/images/1701765665878.jpg`}
                 alt="n"
