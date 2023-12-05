@@ -6,8 +6,8 @@ export const formatDateWithoutTime = (timestamp) => {
   return `${year}-${month}-${day}`;
 };
 
-export const baseUrl = "http://localhost:5000/dev";
-export const getUrl = `${baseUrl}`;
+export const baseUrl = "http://localhost:5000";
+export const getUrl = `${baseUrl}/dev`;
 export const createUrl = `${baseUrl}/create-dev`;
 export const editUrl = `${baseUrl}/edit-dev`;
 export const deleteUrl = `${baseUrl}/delete-dev`;

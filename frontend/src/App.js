@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "./axiosConfig";
 import {
   formatDateWithoutTime,
+  baseUrl,
   getUrl,
   createUrl,
   editUrl,
@@ -304,7 +305,7 @@ const App = () => {
           </Col>
 
           <Col xs={12} md={6}>
-            <Form ref={uploadRef} onSubmit={submitDevFiles}>
+            <Form ref={uploadRef} onSubmit={submitDevFiles} className="mb-2">
               <Form.Group className="mb-2" controlId="image">
                 <Form.Label>Upload Dev photo</Form.Label>
                 <Form.Control
@@ -317,6 +318,7 @@ const App = () => {
                 Upload devFile
               </Button>
             </Form>
+            <img src={`${baseUrl}/images/1701765665878.jpg`} alt="n" />
           </Col>
         </Row>
       </Container>
