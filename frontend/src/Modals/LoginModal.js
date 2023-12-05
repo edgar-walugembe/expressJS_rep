@@ -27,16 +27,17 @@ export const LoginDeveloperModal = ({
           // ref={}
           // onSubmit={}
           autoComplete="true"
+          className="d-flex flex-column justify-content-center"
         >
           <Row>
             <Col xs={12} md={6}>
-              <Form.Group className="mb-2 flex" controlId="firstName">
+              <Form.Group className="mb-2 flex" controlId="username">
                 <Form.Label>UserName</Form.Label>
                 <Form.Control
                   required={true}
-                  name="userName"
+                  name="username"
                   type="text"
-                  placeholder="Enter user name"
+                  placeholder="Enter Username"
                 />
                 <Form.Control.Feedback type="invalid">
                   userName is required.
@@ -47,7 +48,24 @@ export const LoginDeveloperModal = ({
 
           <Row>
             <Col xs={12} md={6}>
-              <Form.Group className="mb-2" controlId="lastName">
+              <Form.Group className="mb-2 flex" controlId="email">
+                <Form.Label>E-mail</Form.Label>
+                <Form.Control
+                  required={true}
+                  name="email"
+                  type="text"
+                  placeholder="Enter E-mail."
+                />
+                <Form.Control.Feedback type="invalid">
+                  E-mail is required.
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col xs={12} md={6}>
+              <Form.Group className="mb-2" controlId="password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
                   required={true}
