@@ -25,6 +25,4 @@ router.patch("/edit-dev", editDev);
 
 router.post("/upload-devFiles", upload.single("images"), uploadDevFiles);
 
-// router.post();
-
 module.exports = router;
