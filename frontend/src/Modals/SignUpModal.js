@@ -15,6 +15,7 @@ export const SignUpDeveloperModal = ({
       centered
       keyboard={false}
       backdrop="static"
+      className="d-flex flex-column justify-content-center align-content-center p-5"
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
@@ -28,7 +29,6 @@ export const SignUpDeveloperModal = ({
           // ref={}
           // onSubmit={}
           autoComplete="true"
-          className="d-flex flex-column justify-content-center"
         >
           <Row>
             <Col xs={12} md={6}>
@@ -41,7 +41,7 @@ export const SignUpDeveloperModal = ({
                   placeholder="Enter Username"
                 />
                 <Form.Control.Feedback type="invalid">
-                  userName is required.
+                  UserName is required.
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
