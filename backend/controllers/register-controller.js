@@ -27,4 +27,6 @@ async function fetchAllDev(req, res) {
     .json({ message: "here is the list of registered developers!" });
 }
 
-module.exports = { registerDev, fetchAllDev };
+async function verifyDev(req, res) {}
+
+module.exports = { registerDev, fetchAllDev, verifyDev };
