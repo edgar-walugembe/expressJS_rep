@@ -21,4 +21,10 @@ async function registerDev(req, res, next) {
   console.log(req.body);
 }
 
-module.exports = { registerDev };
+async function fetchAllDev(req, res) {
+  res
+    .status(200)
+    .json({ message: "here is the list of registered developers!" });
+}
+
+module.exports = { registerDev, fetchAllDev };
