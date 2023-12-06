@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: {
-          args: true,
+          name: "username_unique",
           msg: "username must be unique",
         },
       },
@@ -20,14 +20,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: {
-          args: true,
+          name: "email_unique",
           msg: "email must be unique",
         },
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: { args: true, msg: "password must be unique" },
+        unique: { name: "password_unique", msg: "password must be unique" },
         len: {
           args: [10, 500],
           msg: "password must be at least 10 characters",
