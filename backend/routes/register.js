@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+
 const {
   registerDev,
   fetchAllDev,
@@ -13,5 +14,3 @@ router.post("/sign-up", registerDev);
 router.post("/log-in", verifyDev);
 
 module.exports = router;
-
-//29:20
