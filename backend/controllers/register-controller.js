@@ -1,5 +1,6 @@
 const { User, Sequelize, sequelize } = require("../database/models");
 const jwt = require("jsonwebtoken");
+require("dotenv").config({ path: "../test/.env" });
 
 async function registerDev(req, res, next) {
   try {
@@ -39,17 +40,17 @@ async function verifyDev(req, res) {
   try {
     const { username, email, password } = req.body;
 
-    const verifiedUser = User.findOne({ where: { username, email } });
+    const verifiedUser = await User.findOne({ where: { username, email } });
 
     if (!verifiedUser) {
       return res.json({
-        message: `username or email or password does not match!`,
+        message: `username or email or password does not match! 0000`,
       });
     }
 
     if (verifiedUser.password !== password) {
       return res.json({
-        message: `username or email or password does not match!`,
+        message: `username or email or password does not match! 0001`,
       });
     }
 

@@ -59,7 +59,7 @@ async function editDev(req, res, next) {
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).send({ err });
+    return res.status(500).send({ error });
   }
 }
 
