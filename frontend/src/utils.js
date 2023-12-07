@@ -8,7 +8,7 @@ export const formatDateWithoutTime = (timestamp) => {
 
 export const baseUrl = "http://localhost:5000";
 export const getUrl = `${baseUrl}/dev`;
-export const createUrl = `${baseUrl}/create-dev`;
-export const editUrl = `${baseUrl}/edit-dev`;
-export const deleteUrl = `${baseUrl}/delete-dev`;
-export const uploadUrl = `${baseUrl}/upload-devFiles`;
+export const createUrl = `${baseUrl}/dev/create-dev`;
+export const editUrl = `${baseUrl}/dev/edit-dev`;
+export const deleteUrl = `${baseUrl}/dev/delete-dev`;
+export const uploadUrl = `${baseUrl}/dev/upload-devFiles`;
