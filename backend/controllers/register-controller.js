@@ -1,6 +1,7 @@
 const { User, Sequelize, sequelize } = require("../database/models");
 const jwt = require("jsonwebtoken");
-require("dotenv").config({ path: "../test/.env" });
+const bcrypt = require("bcrypt");
+const JWT_SECRET = "@@r0nr@msd@l3";
 
 async function registerDev(req, res, next) {
   try {
@@ -54,9 +55,17 @@ async function verifyDev(req, res) {
       });
     }
 
+    // const passwordMatch = await bcrypt.compare(password, verifiedUser.password);
+
+    // if (!passwordMatch) {
+    //   return res.json({
+    //     message: `password does not match! 0001`,
+    //   });
+    // }
+
     const jwtToken = jwt.sign(
       { id: verifiedUser.id, email: verifiedUser.email },
-      process.env.JWT_SECRET
+      JWT_SECRET
     );
 
     res.json({ message: "Welcome Back Dev!", token: jwtToken });
@@ -66,5 +75,3 @@ async function verifyDev(req, res) {
 }
 
 module.exports = { registerDev, fetchAllDev, verifyDev };
-
-//43:00
