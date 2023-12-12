@@ -44,7 +44,7 @@ export const EditDeveloperModal = ({
   };
 
   return (
-    <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+    <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false} size="lg">
       <Modal.Header closeButton>
         <Modal.Title>
           {editDev ? "Edit Developer" : "Add New Developer"}

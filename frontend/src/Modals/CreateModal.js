@@ -32,7 +32,7 @@ export const CreateDeveloperModal = ({
     <Modal
       show={visible}
       onHide={closeCreateDevDialog}
-      size="md"
+      size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
       keyboard={false}

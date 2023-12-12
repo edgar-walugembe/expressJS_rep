@@ -1,6 +1,6 @@
 import { Modal, Form, Col, Row, Button } from "react-bootstrap";
 
-export const LoginDeveloperModal = ({
+export const LogInDeveloperModal = ({
   loginModal,
   closeLoginDevDialog,
   validated,
@@ -9,12 +9,12 @@ export const LoginDeveloperModal = ({
     <Modal
       show={loginModal}
       onHide={closeLoginDevDialog}
-      size="lg"
+      size="md"
       aria-labelledby="contained-modal-title-vcenter"
       centered
       keyboard={false}
       backdrop="static"
-      className="d-flex flex-column justify-content-center p-5"
+      dialogClassName="modal-50w"
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
@@ -30,7 +30,7 @@ export const LoginDeveloperModal = ({
           autoComplete="true"
         >
           <Row>
-            <Col xs={12} md={6}>
+            <Col xs={12} md={12}>
               <Form.Group className="mb-2 flex" controlId="username">
                 <Form.Label>UserName</Form.Label>
                 <Form.Control
@@ -47,7 +47,7 @@ export const LoginDeveloperModal = ({
           </Row>
 
           <Row>
-            <Col xs={12} md={6}>
+            <Col xs={12} md={12}>
               <Form.Group className="mb-2 flex" controlId="email">
                 <Form.Label>E-mail</Form.Label>
                 <Form.Control
@@ -64,7 +64,7 @@ export const LoginDeveloperModal = ({
           </Row>
 
           <Row>
-            <Col xs={12} md={6}>
+            <Col xs={12} md={12}>
               <Form.Group className="mb-2" controlId="password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control

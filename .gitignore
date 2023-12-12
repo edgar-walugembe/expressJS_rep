@@ -3,13 +3,7 @@
 #dependencies
 /backend/node_modules
 
-#my stuff
-/backend/database/models/teacher.js
-/backend/database/migrations/20231015190934-create-teacher.js
-/backend/database/seeders/20231129105950-add-passwordColumn.js
-/backend/routes/teachers.js
-/backend/deleteTeacher.js
-/backend/insert-data.js
+#my stuffs
 /backend/README.md
 
 #frontend#

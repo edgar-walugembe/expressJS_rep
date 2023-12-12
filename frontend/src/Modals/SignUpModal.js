@@ -10,12 +10,12 @@ export const SignUpDeveloperModal = ({
     <Modal
       show={signupModal}
       onHide={closeSignupDevDialog}
-      size="lg"
+      size="md"
       aria-labelledby="contained-modal-title-vcenter"
       centered
       keyboard={false}
       backdrop="static"
-      className="d-flex flex-column justify-content-center align-content-center p-5"
+      dialogClassName="modal-50w"
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
@@ -31,7 +31,7 @@ export const SignUpDeveloperModal = ({
           autoComplete="true"
         >
           <Row>
-            <Col xs={12} md={6}>
+            <Col xs={12} md={12}>
               <Form.Group className="mb-2 flex" controlId="username">
                 <Form.Label>UserName</Form.Label>
                 <Form.Control
@@ -48,7 +48,7 @@ export const SignUpDeveloperModal = ({
           </Row>
 
           <Row>
-            <Col xs={12} md={6}>
+            <Col xs={12} md={12}>
               <Form.Group className="mb-2 flex" controlId="email">
                 <Form.Label>E-mail</Form.Label>
                 <Form.Control
@@ -65,7 +65,7 @@ export const SignUpDeveloperModal = ({
           </Row>
 
           <Row>
-            <Col xs={12} md={6}>
+            <Col xs={12} md={12}>
               <Form.Group className="mb-2" controlId="password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control

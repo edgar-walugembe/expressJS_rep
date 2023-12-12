@@ -16,7 +16,7 @@ import {
   CreateDeveloperModal,
   EditDeveloperModal,
   DeleteDeveloperModal,
-  LoginDeveloperModal,
+  LogInDeveloperModal,
   SignUpDeveloperModal,
 } from "./Modals";
 
@@ -358,7 +358,7 @@ const App = () => {
       />
 
       {/* login developer */}
-      <LoginDeveloperModal
+      <LogInDeveloperModal
         loginModal={loginModal}
         closeLoginDevDialog={closeLoginDevDialog}
       />
