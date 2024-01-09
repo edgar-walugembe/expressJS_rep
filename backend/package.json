@@ -7,8 +7,8 @@
     "start": "npm run create:db && npm run run:migrations && npm run start:app",
     "start:app": "node ./bin/www",
     "start:dev": "nodemon --inspect",
-    "create:db": "sequelize db:create",
-    "run:migrations": "sequelize db:migrate",
+    "create:db": "npx sequelize-cli db:create",
+    "run:migrations": "npx sequelize-cli db:migrate",
     "insert:data": "node ./insert-data.js"
   },
   "dependencies": {
